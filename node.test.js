@@ -12444,6 +12444,7 @@ var $;
 var $;
 (function ($) {
     class $bog_metrics_event extends $giper_baza_dict.with({
+        App: $giper_baza_atom_text,
         Type: $giper_baza_atom_text,
         Url: $giper_baza_atom_text,
         Uid: $giper_baza_atom_text,
@@ -13381,7 +13382,11 @@ var $;
 })($ || ($ = {}));
 
 ;
-	($.$bog_metrics) = class $bog_metrics extends ($.$mol_plugin) {};
+	($.$bog_metrics) = class $bog_metrics extends ($.$mol_plugin) {
+		app(){
+			return "";
+		}
+	};
 
 
 ;
@@ -13440,6 +13445,7 @@ var $;
                     const event = dict.key(key, 'auto');
                     if (!event)
                         return;
+                    event.App('auto').val(this.app() || location.hostname);
                     event.Type('auto').val(type);
                     event.Url('auto').val(this.sanitize_url(location.href));
                     event.Uid('auto').val(this.uid());
@@ -18301,6 +18307,16 @@ var $;
 
 ;
 	($.$bog_metrics_dashboard) = class $bog_metrics_dashboard extends ($.$mol_page) {
+		app_options(){
+			return {};
+		}
+		App_filter(){
+			const obj = new this.$.$mol_select();
+			(obj.value) = (next) => ((this.app(next)));
+			(obj.dictionary) = () => ((this.app_options()));
+			(obj.hint) = () => ("All apps");
+			return obj;
+		}
 		Status(){
 			const obj = new this.$.$giper_baza_status();
 			return obj;
@@ -18320,7 +18336,7 @@ var $;
 		page_body(){
 			return [];
 		}
-		all_events(){
+		filtered_events(){
 			return [];
 		}
 		title(){
@@ -18344,8 +18360,16 @@ var $;
 			});
 			return obj;
 		}
+		app(next){
+			if(next !== undefined) return next;
+			return "";
+		}
 		tools(){
-			return [(this.Status()), (this.Theme_toggle())];
+			return [
+				(this.App_filter()), 
+				(this.Status()), 
+				(this.Theme_toggle())
+			];
 		}
 		plugins(){
 			return [(this.Theme())];
@@ -18362,30 +18386,32 @@ var $;
 		}
 		Overview(){
 			const obj = new this.$.$bog_metrics_dashboard_overview();
-			(obj.all_events) = () => ((this.all_events()));
+			(obj.all_events) = () => ((this.filtered_events()));
 			return obj;
 		}
 		Sessions(){
 			const obj = new this.$.$bog_metrics_dashboard_sessions();
-			(obj.all_events) = () => ((this.all_events()));
+			(obj.all_events) = () => ((this.filtered_events()));
 			return obj;
 		}
 		Vitals(){
 			const obj = new this.$.$bog_metrics_dashboard_vitals();
-			(obj.all_events) = () => ((this.all_events()));
+			(obj.all_events) = () => ((this.filtered_events()));
 			return obj;
 		}
 		Errors(){
 			const obj = new this.$.$bog_metrics_dashboard_errors();
-			(obj.all_events) = () => ((this.all_events()));
+			(obj.all_events) = () => ((this.filtered_events()));
 			return obj;
 		}
 	};
+	($mol_mem(($.$bog_metrics_dashboard.prototype), "App_filter"));
 	($mol_mem(($.$bog_metrics_dashboard.prototype), "Status"));
 	($mol_mem(($.$bog_metrics_dashboard.prototype), "Theme_toggle"));
 	($mol_mem(($.$bog_metrics_dashboard.prototype), "Theme"));
 	($mol_mem(($.$bog_metrics_dashboard.prototype), "page"));
 	($mol_mem(($.$bog_metrics_dashboard.prototype), "Navbar"));
+	($mol_mem(($.$bog_metrics_dashboard.prototype), "app"));
 	($mol_mem(($.$bog_metrics_dashboard.prototype), "Overview"));
 	($mol_mem(($.$bog_metrics_dashboard.prototype), "Sessions"));
 	($mol_mem(($.$bog_metrics_dashboard.prototype), "Vitals"));
@@ -18438,6 +18464,7 @@ var $;
                         return null;
                     return {
                         key,
+                        app: ev.App()?.val() ?? '',
                         type: ev.Type()?.val() ?? '',
                         url: ev.Url()?.val() ?? '',
                         uid: ev.Uid()?.val() ?? '',
@@ -18447,6 +18474,20 @@ var $;
                         data: ev.Data()?.val() ?? '',
                     };
                 }).filter(Boolean);
+            }
+            app_options() {
+                const apps = new Set(this.all_events().map(e => e.app).filter(Boolean));
+                const dict = {};
+                for (const app of [...apps].sort()) {
+                    dict[app] = app;
+                }
+                return dict;
+            }
+            filtered_events() {
+                const app = this.app();
+                if (!app)
+                    return this.all_events();
+                return this.all_events().filter(e => e.app === app);
             }
             page_body() {
                 switch (this.page()) {
@@ -18460,6 +18501,9 @@ var $;
         __decorate([
             $mol_mem
         ], $bog_metrics_dashboard.prototype, "all_events", null);
+        __decorate([
+            $mol_mem
+        ], $bog_metrics_dashboard.prototype, "app_options", null);
         $$.$bog_metrics_dashboard = $bog_metrics_dashboard;
     })($$ = $.$$ || ($.$$ = {}));
 })($ || ($ = {}));

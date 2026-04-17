@@ -4962,6 +4962,7 @@ declare namespace $ {
 declare namespace $ {
     const $bog_metrics_event_base: Omit<typeof $giper_baza_dict, "prototype"> & {
         new (...args: any[]): $mol_type_override<$giper_baza_dict, {
+            readonly App: (auto?: any) => $giper_baza_atom_text | null;
             readonly Type: (auto?: any) => $giper_baza_atom_text | null;
             readonly Url: (auto?: any) => $giper_baza_atom_text | null;
             readonly Uid: (auto?: any) => $giper_baza_atom_text | null;
@@ -4975,6 +4976,7 @@ declare namespace $ {
         schema: {
             [x: string]: typeof $giper_baza_pawn;
         } & {
+            readonly App: typeof $giper_baza_atom_text;
             readonly Type: typeof $giper_baza_atom_text;
             readonly Url: typeof $giper_baza_atom_text;
             readonly Uid: typeof $giper_baza_atom_text;
@@ -5472,6 +5474,7 @@ declare namespace $.$$ {
 declare namespace $ {
 
 	export class $bog_metrics extends $mol_plugin {
+		app( ): string
 	}
 	
 }
@@ -7425,32 +7428,47 @@ declare namespace $ {
 
 declare namespace $ {
 
-	type $bog_theme_toggle__theme_auto_bog_metrics_dashboard_1 = $mol_type_enforce<
+	type $mol_select__value_bog_metrics_dashboard_1 = $mol_type_enforce<
+		ReturnType< $bog_metrics_dashboard['app'] >
+		,
+		ReturnType< $mol_select['value'] >
+	>
+	type $mol_select__dictionary_bog_metrics_dashboard_2 = $mol_type_enforce<
+		ReturnType< $bog_metrics_dashboard['app_options'] >
+		,
+		ReturnType< $mol_select['dictionary'] >
+	>
+	type $mol_select__hint_bog_metrics_dashboard_3 = $mol_type_enforce<
+		string
+		,
+		ReturnType< $mol_select['hint'] >
+	>
+	type $bog_theme_toggle__theme_auto_bog_metrics_dashboard_4 = $mol_type_enforce<
 		ReturnType< $bog_metrics_dashboard['Theme'] >
 		,
 		ReturnType< $bog_theme_toggle['theme_auto'] >
 	>
-	type $bog_theme_auto__theme_light_bog_metrics_dashboard_2 = $mol_type_enforce<
+	type $bog_theme_auto__theme_light_bog_metrics_dashboard_5 = $mol_type_enforce<
 		string
 		,
 		ReturnType< $bog_theme_auto['theme_light'] >
 	>
-	type $bog_theme_auto__theme_dark_bog_metrics_dashboard_3 = $mol_type_enforce<
+	type $bog_theme_auto__theme_dark_bog_metrics_dashboard_6 = $mol_type_enforce<
 		string
 		,
 		ReturnType< $bog_theme_auto['theme_dark'] >
 	>
-	type $bog_theme_auto__themes_bog_metrics_dashboard_4 = $mol_type_enforce<
+	type $bog_theme_auto__themes_bog_metrics_dashboard_7 = $mol_type_enforce<
 		readonly(any)[]
 		,
 		ReturnType< $bog_theme_auto['themes'] >
 	>
-	type $mol_switch__value_bog_metrics_dashboard_5 = $mol_type_enforce<
+	type $mol_switch__value_bog_metrics_dashboard_8 = $mol_type_enforce<
 		ReturnType< $bog_metrics_dashboard['page'] >
 		,
 		ReturnType< $mol_switch['value'] >
 	>
-	type $mol_switch__options_bog_metrics_dashboard_6 = $mol_type_enforce<
+	type $mol_switch__options_bog_metrics_dashboard_9 = $mol_type_enforce<
 		({ 
 			'overview': string,
 			'sessions': string,
@@ -7460,36 +7478,39 @@ declare namespace $ {
 		,
 		ReturnType< $mol_switch['options'] >
 	>
-	type $bog_metrics_dashboard_overview__all_events_bog_metrics_dashboard_7 = $mol_type_enforce<
-		ReturnType< $bog_metrics_dashboard['all_events'] >
+	type $bog_metrics_dashboard_overview__all_events_bog_metrics_dashboard_10 = $mol_type_enforce<
+		ReturnType< $bog_metrics_dashboard['filtered_events'] >
 		,
 		ReturnType< $bog_metrics_dashboard_overview['all_events'] >
 	>
-	type $bog_metrics_dashboard_sessions__all_events_bog_metrics_dashboard_8 = $mol_type_enforce<
-		ReturnType< $bog_metrics_dashboard['all_events'] >
+	type $bog_metrics_dashboard_sessions__all_events_bog_metrics_dashboard_11 = $mol_type_enforce<
+		ReturnType< $bog_metrics_dashboard['filtered_events'] >
 		,
 		ReturnType< $bog_metrics_dashboard_sessions['all_events'] >
 	>
-	type $bog_metrics_dashboard_vitals__all_events_bog_metrics_dashboard_9 = $mol_type_enforce<
-		ReturnType< $bog_metrics_dashboard['all_events'] >
+	type $bog_metrics_dashboard_vitals__all_events_bog_metrics_dashboard_12 = $mol_type_enforce<
+		ReturnType< $bog_metrics_dashboard['filtered_events'] >
 		,
 		ReturnType< $bog_metrics_dashboard_vitals['all_events'] >
 	>
-	type $bog_metrics_dashboard_errors__all_events_bog_metrics_dashboard_10 = $mol_type_enforce<
-		ReturnType< $bog_metrics_dashboard['all_events'] >
+	type $bog_metrics_dashboard_errors__all_events_bog_metrics_dashboard_13 = $mol_type_enforce<
+		ReturnType< $bog_metrics_dashboard['filtered_events'] >
 		,
 		ReturnType< $bog_metrics_dashboard_errors['all_events'] >
 	>
 	export class $bog_metrics_dashboard extends $mol_page {
+		app_options( ): Record<string, any>
+		App_filter( ): $mol_select
 		Status( ): $giper_baza_status
 		Theme_toggle( ): $bog_theme_toggle
 		Theme( ): $bog_theme_auto
 		page_body( ): readonly(any)[]
-		all_events( ): readonly(any)[]
+		filtered_events( ): readonly(any)[]
 		title( ): string
 		metrics_land_link( ): string
 		page( next?: string ): string
 		Navbar( ): $mol_switch
+		app( next?: string ): string
 		tools( ): readonly(any)[]
 		plugins( ): readonly(any)[]
 		head( ): readonly(any)[]
@@ -7546,6 +7567,19 @@ declare namespace $.$$ {
         };
         all_events(): {
             key: string;
+            app: string;
+            type: string;
+            url: string;
+            uid: string;
+            session_id: string;
+            timestamp: number;
+            referrer: string;
+            data: string;
+        }[];
+        app_options(): Record<string, string>;
+        filtered_events(): {
+            key: string;
+            app: string;
             type: string;
             url: string;
             uid: string;

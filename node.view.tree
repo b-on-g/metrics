@@ -1,4 +1,5 @@
 $bog_metrics $mol_plugin
+	app \
 
 $mol_scroll $mol_view
 	scroll_top? 0
@@ -498,7 +499,12 @@ $bog_metrics_dashboard $mol_page
 			sessions \Sessions
 			vitals \Vitals
 			errors \Errors
+	app? \
 	tools /
+		<= App_filter $mol_select
+			value? <=> app?
+			dictionary <= app_options *
+			hint \All apps
 		<= Status $giper_baza_status
 		<= Theme_toggle $bog_theme_toggle
 			theme_auto <= Theme
@@ -515,13 +521,13 @@ $bog_metrics_dashboard $mol_page
 		<= Tools
 	body <= page_body /
 	Overview $bog_metrics_dashboard_overview
-		all_events <= all_events /
+		all_events <= filtered_events /
 	Sessions $bog_metrics_dashboard_sessions
-		all_events <= all_events /
+		all_events <= filtered_events /
 	Vitals $bog_metrics_dashboard_vitals
-		all_events <= all_events /
+		all_events <= filtered_events /
 	Errors $bog_metrics_dashboard_errors
-		all_events <= all_events /
+		all_events <= filtered_events /
 
 $mol_row $mol_view
 
