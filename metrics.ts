@@ -55,6 +55,7 @@ namespace $.$$ {
 				const event = dict.key(key, 'auto')
 				if (!event) return
 
+				event.App('auto')!.val(this.app() || location.hostname)
 				event.Type('auto')!.val(type)
 				event.Url('auto')!.val(this.sanitize_url(location.href))
 				event.Uid('auto')!.val(this.uid())

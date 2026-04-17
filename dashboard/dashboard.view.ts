@@ -20,6 +20,7 @@ namespace $.$$ {
 				if (!ev) return null
 				return {
 					key,
+					app: ev.App()?.val() ?? '',
 					type: ev.Type()?.val() ?? '',
 					url: ev.Url()?.val() ?? '',
 					uid: ev.Uid()?.val() ?? '',
@@ -30,6 +31,7 @@ namespace $.$$ {
 				}
 			}).filter(Boolean) as {
 				key: string
+				app: string
 				type: string
 				url: string
 				uid: string
@@ -38,6 +40,22 @@ namespace $.$$ {
 				referrer: string
 				data: string
 			}[]
+		}
+
+		@$mol_mem
+		app_options() {
+			const apps = new Set(this.all_events().map(e => e.app).filter(Boolean))
+			const dict: Record<string, string> = {}
+			for (const app of [...apps].sort()) {
+				dict[app] = app
+			}
+			return dict
+		}
+
+		filtered_events() {
+			const app = this.app()
+			if (!app) return this.all_events()
+			return this.all_events().filter(e => e.app === app)
 		}
 
 		page_body() {
