@@ -1,0 +1,10 @@
+{
+	"name": "bog_metrics_dashboard",
+	"short_name": "bog_metrics_dashboard",
+	"description": "",
+	"id": "bog_metrics_dashboard",
+	"start_url": ".",
+	"display": "standalone",
+	"background_color": "#000000",
+	"theme_color": "#000000"
+}
