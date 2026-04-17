@@ -5,7 +5,7 @@ permissions: write-all
 on:
     workflow_dispatch:
     push:
-        branches: [master]
+        branches: [main]
 
 concurrency:
     group: deploy-metrics
