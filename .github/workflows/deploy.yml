@@ -1,0 +1,25 @@
+name: $bog_metrics_dashboard
+
+permissions: write-all
+
+on:
+    workflow_dispatch:
+    push:
+        branches: [master]
+
+concurrency:
+    group: deploy-metrics
+    cancel-in-progress: true
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: hyoo-ru/mam_build@master2
+              with:
+                  package: "bog/metrics/dashboard"
+
+            - uses: hyoo-ru/gh-deploy@v4.4.1
+              with:
+                  folder: "bog/metrics/dashboard/-"

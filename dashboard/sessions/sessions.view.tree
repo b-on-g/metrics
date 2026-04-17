@@ -1,0 +1,29 @@
+$bog_metrics_dashboard_sessions $mol_page
+	title \Sessions
+	Head null
+	all_events /
+	body /
+		<= Summary $mol_row
+			sub /
+				<= Total_card $bog_metrics_dashboard_stat_card
+					title \Total sessions
+					value <= total_sessions \0
+				<= Avg_duration_card $bog_metrics_dashboard_stat_card
+					title \Avg duration
+					value <= avg_duration \—
+				<= Avg_pages_card $bog_metrics_dashboard_stat_card
+					title \Avg pages
+					value <= avg_pages \0
+		<= Sessions_list $mol_section
+			title \Recent sessions
+			content <= session_rows /
+				<= Session_row*0 $mol_row
+					sub /
+						<= Session_uid* $mol_paragraph
+							title <= session_uid* \
+						<= Session_duration* $mol_paragraph
+							title <= session_duration* \
+						<= Session_pages* $mol_paragraph
+							title <= session_pages* \
+						<= Session_time* $mol_paragraph
+							title <= session_time* \

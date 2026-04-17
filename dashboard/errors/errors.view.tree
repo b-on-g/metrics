@@ -1,0 +1,25 @@
+$bog_metrics_dashboard_errors $mol_page
+	title \Errors
+	Head null
+	all_events /
+	body /
+		<= Summary $mol_row
+			sub /
+				<= Total_card $bog_metrics_dashboard_stat_card
+					title \Total errors
+					value <= total_errors \0
+				<= Unique_card $bog_metrics_dashboard_stat_card
+					title \Unique errors
+					value <= unique_errors \0
+		<= Errors_list $mol_section
+			title \Errors by message
+			content <= error_rows /
+				<= Error_row*0 $mol_section
+					title <= error_message* \
+					content /
+						<= Error_details*0 $mol_row
+							sub /
+								<= Error_count* $mol_paragraph
+									title <= error_count* \
+								<= Error_last_seen* $mol_paragraph
+									title <= error_last_seen* \

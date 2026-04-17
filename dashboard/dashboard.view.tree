@@ -1,0 +1,35 @@
+$bog_metrics_dashboard $mol_page
+	title \Metrics
+	metrics_land_link \CaoqVcdi_Ix22TDSf
+	page? \overview
+	Navbar $mol_switch
+		value? <=> page?
+		options *
+			overview \Overview
+			sessions \Sessions
+			vitals \Vitals
+			errors \Errors
+	tools /
+		<= Status $giper_baza_status
+		<= Theme_toggle $bog_theme_toggle
+			theme_auto <= Theme
+	plugins /
+		<= Theme $bog_theme_auto
+			theme_light \$mol_theme_calm_light
+			theme_dark \$mol_theme_calm_dark
+			themes /
+				\$mol_theme_calm_light
+				\$mol_theme_calm_dark
+	head /
+		<= Title
+		<= Navbar
+		<= Tools
+	body <= page_body /
+	Overview $bog_metrics_dashboard_overview
+		all_events <= all_events /
+	Sessions $bog_metrics_dashboard_sessions
+		all_events <= all_events /
+	Vitals $bog_metrics_dashboard_vitals
+		all_events <= all_events /
+	Errors $bog_metrics_dashboard_errors
+		all_events <= all_events /

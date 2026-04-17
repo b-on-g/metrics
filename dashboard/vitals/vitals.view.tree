@@ -1,0 +1,40 @@
+$bog_metrics_dashboard_vitals $mol_page
+	title \Vitals
+	Head null
+	all_events /
+	body /
+		<= Summary $mol_row
+			sub /
+				<= Lcp_card $bog_metrics_dashboard_stat_card
+					title \LCP p75
+					value <= lcp_p75 \—
+				<= Inp_card $bog_metrics_dashboard_stat_card
+					title \INP p75
+					value <= inp_p75 \—
+				<= Cls_card $bog_metrics_dashboard_stat_card
+					title \CLS p75
+					value <= cls_p75 \—
+		<= Chart_section $mol_section
+			title \LCP over time
+			content /
+				<= Chart $mol_chart
+					graphs /
+						<= Lcp_line $mol_plot_line
+							title \LCP (ms)
+							series_y <= chart_lcp_y /number
+						<= Time_labels $mol_plot_mark_hor
+							title \Time
+							labels <= chart_time_labels /string
+						<= Value_axis $mol_plot_ruler_vert
+							title \ms
+		<= Vitals_list $mol_section
+			title \Recent vitals
+			content <= vital_rows /
+				<= Vital_row*0 $mol_row
+					sub /
+						<= Vital_name* $mol_paragraph
+							title <= vital_name* \
+						<= Vital_value* $mol_paragraph
+							title <= vital_value* \
+						<= Vital_time* $mol_paragraph
+							title <= vital_time* \
