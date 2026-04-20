@@ -16,13 +16,24 @@ namespace $.$$ {
 		}
 
 		uid() {
-			const key = 'bog_metrics_uid'
-			let uid = localStorage.getItem(key)
-			if (!uid) {
-				uid = crypto.randomUUID()
-				localStorage.setItem(key, uid)
+			const day = new Date().toISOString().slice(0, 10)
+			const parts = [
+				day,
+				navigator.userAgent,
+				navigator.language,
+				Intl.DateTimeFormat().resolvedOptions().timeZone,
+				`${screen.width}x${screen.height}`,
+			]
+			return this.hash_fnv(parts.join('|'))
+		}
+
+		hash_fnv(s: string) {
+			let h = 2166136261
+			for (let i = 0; i < s.length; i++) {
+				h ^= s.charCodeAt(i)
+				h = Math.imul(h, 16777619)
 			}
-			return uid
+			return (h >>> 0).toString(36)
 		}
 
 		session_id() {
@@ -32,10 +43,17 @@ namespace $.$$ {
 		sanitize_url(url: string) {
 			try {
 				const u = new URL(url)
-				return u.origin + u.pathname + u.search
+				return u.origin + u.pathname + u.search + this.normalize_hash(u.hash)
 			} catch {
 				return url.replace(/[^\w/?.&=#:-]/g, '')
 			}
+		}
+
+		normalize_hash(hash: string) {
+			if (!hash) return ''
+			return hash.replace(/=([^/&]+)/g, (_, v: string) =>
+				v.length >= 10 && /^[\w-]+$/.test(v) && !/^\d+$/.test(v) ? '=*' : '=' + v
+			)
 		}
 
 		dnt_enabled() {
@@ -75,10 +93,24 @@ namespace $.$$ {
 
 		render() {
 			this.init_tracking()
+			this.listen_navigation()
 			this.listen_visibility()
 			this.listen_errors()
 			this.listen_vitals()
 			return null
+		}
+
+		@$mol_mem
+		listen_navigation() {
+			const handler = () => this.track_safe('pageview')
+			window.addEventListener('hashchange', handler)
+			window.addEventListener('popstate', handler)
+			return {
+				destructor: () => {
+					window.removeEventListener('hashchange', handler)
+					window.removeEventListener('popstate', handler)
+				},
+			}
 		}
 
 		@$mol_mem

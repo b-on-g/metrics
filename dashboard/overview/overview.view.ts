@@ -74,12 +74,12 @@ namespace $.$$ {
 			return this.top_pages_data().map((_, i) => this.Top_page_row(i))
 		}
 
-		top_page_url(index: number) {
-			return this.top_pages_data()[index]?.[0] ?? ''
+		Top_page_url(id: any) {
+			return this.top_pages_data()[Number(id)]?.[0] ?? ''
 		}
 
-		top_page_count(index: number) {
-			return String(this.top_pages_data()[index]?.[1] ?? 0)
+		Top_page_count(id: any) {
+			return String(this.top_pages_data()[Number(id)]?.[1] ?? 0)
 		}
 
 		@$mol_mem
@@ -98,12 +98,12 @@ namespace $.$$ {
 			return this.top_referrers_data().map((_, i) => this.Top_referrer_row(i))
 		}
 
-		top_referrer_url(index: number) {
-			return this.top_referrers_data()[index]?.[0] ?? ''
+		Top_referrer_url(id: any) {
+			return this.top_referrers_data()[Number(id)]?.[0] ?? ''
 		}
 
-		top_referrer_count(index: number) {
-			return String(this.top_referrers_data()[index]?.[1] ?? 0)
+		Top_referrer_count(id: any) {
+			return String(this.top_referrers_data()[Number(id)]?.[1] ?? 0)
 		}
 	}
 }

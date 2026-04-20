@@ -52,6 +52,13 @@ namespace $.$$ {
 			return dict
 		}
 
+		@$mol_mem
+		app(next?: string): string {
+			if (next !== undefined) return next
+			const opts = Object.keys(this.app_options())
+			return opts[0] ?? ''
+		}
+
 		filtered_events() {
 			const app = this.app()
 			if (!app) return this.all_events()
