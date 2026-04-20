@@ -26235,13 +26235,23 @@ var $;
                 return land.Data(Events_dict);
             }
             uid() {
-                const key = 'bog_metrics_uid';
-                let uid = localStorage.getItem(key);
-                if (!uid) {
-                    uid = crypto.randomUUID();
-                    localStorage.setItem(key, uid);
+                const day = new Date().toISOString().slice(0, 10);
+                const parts = [
+                    day,
+                    navigator.userAgent,
+                    navigator.language,
+                    Intl.DateTimeFormat().resolvedOptions().timeZone,
+                    `${screen.width}x${screen.height}`,
+                ];
+                return this.hash_fnv(parts.join('|'));
+            }
+            hash_fnv(s) {
+                let h = 2166136261;
+                for (let i = 0; i < s.length; i++) {
+                    h ^= s.charCodeAt(i);
+                    h = Math.imul(h, 16777619);
                 }
-                return uid;
+                return (h >>> 0).toString(36);
             }
             session_id() {
                 return this.constructor._session_id ??= crypto.randomUUID();
@@ -26249,11 +26259,16 @@ var $;
             sanitize_url(url) {
                 try {
                     const u = new URL(url);
-                    return u.origin + u.pathname + u.search;
+                    return u.origin + u.pathname + u.search + this.normalize_hash(u.hash);
                 }
                 catch {
                     return url.replace(/[^\w/?.&=#:-]/g, '');
                 }
+            }
+            normalize_hash(hash) {
+                if (!hash)
+                    return '';
+                return hash.replace(/=([^/&]+)/g, (_, v) => v.length >= 10 && /^[\w-]+$/.test(v) && !/^\d+$/.test(v) ? '=*' : '=' + v);
             }
             dnt_enabled() {
                 if (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
@@ -26290,10 +26305,22 @@ var $;
             }
             render() {
                 this.init_tracking();
+                this.listen_navigation();
                 this.listen_visibility();
                 this.listen_errors();
                 this.listen_vitals();
                 return null;
+            }
+            listen_navigation() {
+                const handler = () => this.track_safe('pageview');
+                window.addEventListener('hashchange', handler);
+                window.addEventListener('popstate', handler);
+                return {
+                    destructor: () => {
+                        window.removeEventListener('hashchange', handler);
+                        window.removeEventListener('popstate', handler);
+                    },
+                };
             }
             init_tracking() {
                 setTimeout(() => {
@@ -26358,6 +26385,9 @@ var $;
                 }
             }
         }
+        __decorate([
+            $mol_mem
+        ], $bog_metrics.prototype, "listen_navigation", null);
         __decorate([
             $mol_mem
         ], $bog_metrics.prototype, "init_tracking", null);
@@ -27648,6 +27678,12 @@ var $;
                 }
                 return dict;
             }
+            app(next) {
+                if (next !== undefined)
+                    return next;
+                const opts = Object.keys(this.app_options());
+                return opts[0] ?? '';
+            }
             filtered_events() {
                 const app = this.app();
                 if (!app)
@@ -27669,6 +27705,9 @@ var $;
         __decorate([
             $mol_mem
         ], $bog_metrics_dashboard.prototype, "app_options", null);
+        __decorate([
+            $mol_mem
+        ], $bog_metrics_dashboard.prototype, "app", null);
         $$.$bog_metrics_dashboard = $bog_metrics_dashboard;
     })($$ = $.$$ || ($.$$ = {}));
 })($ || ($ = {}));
@@ -28152,12 +28191,22 @@ var $;
 		Top_page_url(id){
 			return "";
 		}
+		Top_page_url_text(id){
+			const obj = new this.$.$mol_paragraph();
+			(obj.title) = () => ((this.Top_page_url(id)));
+			return obj;
+		}
 		Top_page_count(id){
 			return "";
 		}
+		Top_page_count_text(id){
+			const obj = new this.$.$mol_paragraph();
+			(obj.title) = () => ((this.Top_page_count(id)));
+			return obj;
+		}
 		Top_page_row(id){
 			const obj = new this.$.$mol_row();
-			(obj.sub) = () => ([(this.Top_page_url(id)), (this.Top_page_count(id))]);
+			(obj.sub) = () => ([(this.Top_page_url_text(id)), (this.Top_page_count_text(id))]);
 			return obj;
 		}
 		top_pages_rows(){
@@ -28172,12 +28221,22 @@ var $;
 		Top_referrer_url(id){
 			return "";
 		}
+		Top_referrer_url_text(id){
+			const obj = new this.$.$mol_paragraph();
+			(obj.title) = () => ((this.Top_referrer_url(id)));
+			return obj;
+		}
 		Top_referrer_count(id){
 			return "";
 		}
+		Top_referrer_count_text(id){
+			const obj = new this.$.$mol_paragraph();
+			(obj.title) = () => ((this.Top_referrer_count(id)));
+			return obj;
+		}
 		Top_referrer_row(id){
 			const obj = new this.$.$mol_row();
-			(obj.sub) = () => ([(this.Top_referrer_url(id)), (this.Top_referrer_count(id))]);
+			(obj.sub) = () => ([(this.Top_referrer_url_text(id)), (this.Top_referrer_count_text(id))]);
 			return obj;
 		}
 		top_referrers_rows(){
@@ -28216,8 +28275,12 @@ var $;
 	($mol_mem(($.$bog_metrics_dashboard_overview.prototype), "Count_axis"));
 	($mol_mem(($.$bog_metrics_dashboard_overview.prototype), "Chart"));
 	($mol_mem(($.$bog_metrics_dashboard_overview.prototype), "Chart_section"));
+	($mol_mem_key(($.$bog_metrics_dashboard_overview.prototype), "Top_page_url_text"));
+	($mol_mem_key(($.$bog_metrics_dashboard_overview.prototype), "Top_page_count_text"));
 	($mol_mem_key(($.$bog_metrics_dashboard_overview.prototype), "Top_page_row"));
 	($mol_mem(($.$bog_metrics_dashboard_overview.prototype), "Top_pages_section"));
+	($mol_mem_key(($.$bog_metrics_dashboard_overview.prototype), "Top_referrer_url_text"));
+	($mol_mem_key(($.$bog_metrics_dashboard_overview.prototype), "Top_referrer_count_text"));
 	($mol_mem_key(($.$bog_metrics_dashboard_overview.prototype), "Top_referrer_row"));
 	($mol_mem(($.$bog_metrics_dashboard_overview.prototype), "Top_referrers_section"));
 	($.$bog_metrics_dashboard_stat_card) = class $bog_metrics_dashboard_stat_card extends ($.$mol_view) {
@@ -28312,11 +28375,11 @@ var $;
             top_pages_rows() {
                 return this.top_pages_data().map((_, i) => this.Top_page_row(i));
             }
-            top_page_url(index) {
-                return this.top_pages_data()[index]?.[0] ?? '';
+            Top_page_url(id) {
+                return this.top_pages_data()[Number(id)]?.[0] ?? '';
             }
-            top_page_count(index) {
-                return String(this.top_pages_data()[index]?.[1] ?? 0);
+            Top_page_count(id) {
+                return String(this.top_pages_data()[Number(id)]?.[1] ?? 0);
             }
             top_referrers_data() {
                 const counts = new Map();
@@ -28331,11 +28394,11 @@ var $;
             top_referrers_rows() {
                 return this.top_referrers_data().map((_, i) => this.Top_referrer_row(i));
             }
-            top_referrer_url(index) {
-                return this.top_referrers_data()[index]?.[0] ?? '';
+            Top_referrer_url(id) {
+                return this.top_referrers_data()[Number(id)]?.[0] ?? '';
             }
-            top_referrer_count(index) {
-                return String(this.top_referrers_data()[index]?.[1] ?? 0);
+            Top_referrer_count(id) {
+                return String(this.top_referrers_data()[Number(id)]?.[1] ?? 0);
             }
         }
         __decorate([
@@ -28378,6 +28441,42 @@ var $;
             margin: {
                 top: $mol_gap.block,
             },
+        },
+        Top_page_row: {
+            justifyContent: 'space-between',
+            alignItems: 'baseline',
+            width: '100%',
+            gap: $mol_gap.block,
+        },
+        Top_page_url_text: {
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
+            flex: { grow: 1, shrink: 1 },
+            minWidth: 0,
+        },
+        Top_page_count_text: {
+            flex: { shrink: 0 },
+            font: { weight: 'bold' },
+            color: $mol_theme.current,
+        },
+        Top_referrer_row: {
+            justifyContent: 'space-between',
+            alignItems: 'baseline',
+            width: '100%',
+            gap: $mol_gap.block,
+        },
+        Top_referrer_url_text: {
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
+            flex: { grow: 1, shrink: 1 },
+            minWidth: 0,
+        },
+        Top_referrer_count_text: {
+            flex: { shrink: 0 },
+            font: { weight: 'bold' },
+            color: $mol_theme.current,
         },
     });
     $mol_style_define($bog_metrics_dashboard_stat_card, {

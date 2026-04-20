@@ -2090,15 +2090,19 @@ $bog_metrics_dashboard_overview $mol_page
 			content <= top_pages_rows /
 				<= Top_page_row*0 $mol_row
 					sub /
-						<= Top_page_url* \
-						<= Top_page_count* \
+						<= Top_page_url_text* $mol_paragraph
+							title <= Top_page_url* \
+						<= Top_page_count_text* $mol_paragraph
+							title <= Top_page_count* \
 		<= Top_referrers_section $mol_section
 			title \Top referrers
 			content <= top_referrers_rows /
 				<= Top_referrer_row*0 $mol_row
 					sub /
-						<= Top_referrer_url* \
-						<= Top_referrer_count* \
+						<= Top_referrer_url_text* $mol_paragraph
+							title <= Top_referrer_url* \
+						<= Top_referrer_count_text* $mol_paragraph
+							title <= Top_referrer_count* \
 
 $bog_metrics_dashboard_stat_card $mol_view
 	title \

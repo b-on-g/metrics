@@ -5453,11 +5453,16 @@ declare namespace $.$$ {
             [Symbol.dispose](): void;
         } | null;
         uid(): string;
+        hash_fnv(s: string): string;
         session_id(): any;
         sanitize_url(url: string): string;
+        normalize_hash(hash: string): string;
         dnt_enabled(): boolean;
         track_safe(type: string, data?: Record<string, any>): void;
         render(): null;
+        listen_navigation(): {
+            destructor: () => void;
+        };
         init_tracking(): null;
         listen_visibility(): {
             destructor: () => void;
@@ -7577,6 +7582,7 @@ declare namespace $.$$ {
             data: string;
         }[];
         app_options(): Record<string, string>;
+        app(next?: string): string;
         filtered_events(): {
             key: string;
             app: string;
@@ -8774,32 +8780,52 @@ declare namespace $ {
 		,
 		ReturnType< $mol_section['content'] >
 	>
-	type $mol_row__sub_bog_metrics_dashboard_overview_16 = $mol_type_enforce<
+	type $mol_paragraph__title_bog_metrics_dashboard_overview_16 = $mol_type_enforce<
+		ReturnType< $bog_metrics_dashboard_overview['Top_page_url'] >
+		,
+		ReturnType< $mol_paragraph['title'] >
+	>
+	type $mol_paragraph__title_bog_metrics_dashboard_overview_17 = $mol_type_enforce<
+		ReturnType< $bog_metrics_dashboard_overview['Top_page_count'] >
+		,
+		ReturnType< $mol_paragraph['title'] >
+	>
+	type $mol_row__sub_bog_metrics_dashboard_overview_18 = $mol_type_enforce<
 		readonly(any)[]
 		,
 		ReturnType< $mol_row['sub'] >
 	>
-	type $mol_section__title_bog_metrics_dashboard_overview_17 = $mol_type_enforce<
+	type $mol_section__title_bog_metrics_dashboard_overview_19 = $mol_type_enforce<
 		string
 		,
 		ReturnType< $mol_section['title'] >
 	>
-	type $mol_section__content_bog_metrics_dashboard_overview_18 = $mol_type_enforce<
+	type $mol_section__content_bog_metrics_dashboard_overview_20 = $mol_type_enforce<
 		ReturnType< $bog_metrics_dashboard_overview['top_pages_rows'] >
 		,
 		ReturnType< $mol_section['content'] >
 	>
-	type $mol_row__sub_bog_metrics_dashboard_overview_19 = $mol_type_enforce<
+	type $mol_paragraph__title_bog_metrics_dashboard_overview_21 = $mol_type_enforce<
+		ReturnType< $bog_metrics_dashboard_overview['Top_referrer_url'] >
+		,
+		ReturnType< $mol_paragraph['title'] >
+	>
+	type $mol_paragraph__title_bog_metrics_dashboard_overview_22 = $mol_type_enforce<
+		ReturnType< $bog_metrics_dashboard_overview['Top_referrer_count'] >
+		,
+		ReturnType< $mol_paragraph['title'] >
+	>
+	type $mol_row__sub_bog_metrics_dashboard_overview_23 = $mol_type_enforce<
 		readonly(any)[]
 		,
 		ReturnType< $mol_row['sub'] >
 	>
-	type $mol_section__title_bog_metrics_dashboard_overview_20 = $mol_type_enforce<
+	type $mol_section__title_bog_metrics_dashboard_overview_24 = $mol_type_enforce<
 		string
 		,
 		ReturnType< $mol_section['title'] >
 	>
-	type $mol_section__content_bog_metrics_dashboard_overview_21 = $mol_type_enforce<
+	type $mol_section__content_bog_metrics_dashboard_overview_25 = $mol_type_enforce<
 		ReturnType< $bog_metrics_dashboard_overview['top_referrers_rows'] >
 		,
 		ReturnType< $mol_section['content'] >
@@ -8820,12 +8846,16 @@ declare namespace $ {
 		Chart( ): $mol_chart
 		Chart_section( ): $mol_section
 		Top_page_url( id: any): string
+		Top_page_url_text( id: any): $mol_paragraph
 		Top_page_count( id: any): string
+		Top_page_count_text( id: any): $mol_paragraph
 		Top_page_row( id: any): $mol_row
 		top_pages_rows( ): readonly(any)[]
 		Top_pages_section( ): $mol_section
 		Top_referrer_url( id: any): string
+		Top_referrer_url_text( id: any): $mol_paragraph
 		Top_referrer_count( id: any): string
+		Top_referrer_count_text( id: any): $mol_paragraph
 		Top_referrer_row( id: any): $mol_row
 		top_referrers_rows( ): readonly(any)[]
 		Top_referrers_section( ): $mol_section
@@ -8872,12 +8902,12 @@ declare namespace $.$$ {
         chart_pageviews_y(): number[];
         top_pages_data(): [string, number][];
         top_pages_rows(): $mol_row[];
-        top_page_url(index: number): string;
-        top_page_count(index: number): string;
+        Top_page_url(id: any): string;
+        Top_page_count(id: any): string;
         top_referrers_data(): [string, number][];
         top_referrers_rows(): $mol_row[];
-        top_referrer_url(index: number): string;
-        top_referrer_count(index: number): string;
+        Top_referrer_url(id: any): string;
+        Top_referrer_count(id: any): string;
     }
 }
 
