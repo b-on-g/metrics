@@ -13482,6 +13482,7 @@ var $;
                 this.listen_visibility();
                 this.listen_errors();
                 this.listen_vitals();
+                this.listen_clicks();
                 return null;
             }
             listen_navigation() {
@@ -13534,6 +13535,26 @@ var $;
                     },
                 };
             }
+            listen_clicks() {
+                const handler = (event) => {
+                    try {
+                        const vw = window.innerWidth || document.documentElement.clientWidth || 1;
+                        const vh = window.innerHeight || document.documentElement.clientHeight || 1;
+                        this.track_safe('click', {
+                            x: event.clientX / vw,
+                            y: event.clientY / vh,
+                            path: location.pathname + location.hash,
+                            viewport_w: vw,
+                            viewport_h: vh,
+                        });
+                    }
+                    catch { }
+                };
+                window.addEventListener('click', handler, { capture: true, passive: true });
+                return {
+                    destructor: () => window.removeEventListener('click', handler, { capture: true }),
+                };
+            }
             listen_vitals() {
                 try {
                     const tracked = new Set();
@@ -13570,6 +13591,9 @@ var $;
         __decorate([
             $mol_mem
         ], $bog_metrics.prototype, "listen_errors", null);
+        __decorate([
+            $mol_mem
+        ], $bog_metrics.prototype, "listen_clicks", null);
         __decorate([
             $mol_mem
         ], $bog_metrics.prototype, "listen_vitals", null);
@@ -18386,7 +18410,8 @@ var $;
 				"overview": "Overview", 
 				"sessions": "Sessions", 
 				"vitals": "Vitals", 
-				"errors": "Errors"
+				"errors": "Errors", 
+				"heatmap": "Heatmap"
 			});
 			return obj;
 		}
@@ -18434,6 +18459,11 @@ var $;
 			(obj.all_events) = () => ((this.filtered_events()));
 			return obj;
 		}
+		Heatmap(){
+			const obj = new this.$.$bog_metrics_dashboard_heatmap();
+			(obj.all_events) = () => ((this.filtered_events()));
+			return obj;
+		}
 	};
 	($mol_mem(($.$bog_metrics_dashboard.prototype), "App_filter"));
 	($mol_mem(($.$bog_metrics_dashboard.prototype), "Status"));
@@ -18446,6 +18476,7 @@ var $;
 	($mol_mem(($.$bog_metrics_dashboard.prototype), "Sessions"));
 	($mol_mem(($.$bog_metrics_dashboard.prototype), "Vitals"));
 	($mol_mem(($.$bog_metrics_dashboard.prototype), "Errors"));
+	($mol_mem(($.$bog_metrics_dashboard.prototype), "Heatmap"));
 
 
 ;
@@ -18530,6 +18561,7 @@ var $;
                     case 'sessions': return [this.Sessions()];
                     case 'vitals': return [this.Vitals()];
                     case 'errors': return [this.Errors()];
+                    case 'heatmap': return [this.Heatmap()];
                     default: return [this.Overview()];
                 }
             }
@@ -22065,6 +22097,319 @@ var $;
         Error_last_seen: {
             opacity: 0.5,
             marginLeft: 'auto',
+        },
+    });
+})($ || ($ = {}));
+
+;
+	($.$mol_svg_circle) = class $mol_svg_circle extends ($.$mol_svg) {
+		radius(){
+			return ".5%";
+		}
+		pos_x(){
+			return "";
+		}
+		pos_y(){
+			return "";
+		}
+		dom_name(){
+			return "circle";
+		}
+		pos(){
+			return [];
+		}
+		attr(){
+			return {
+				...(super.attr()), 
+				"r": (this.radius()), 
+				"cx": (this.pos_x()), 
+				"cy": (this.pos_y())
+			};
+		}
+	};
+
+
+;
+"use strict";
+
+;
+"use strict";
+var $;
+(function ($) {
+    var $$;
+    (function ($$) {
+        class $mol_svg_circle extends $.$mol_svg_circle {
+            pos_x() {
+                return this.pos()[0];
+            }
+            pos_y() {
+                return this.pos()[1];
+            }
+        }
+        $$.$mol_svg_circle = $mol_svg_circle;
+    })($$ = $.$$ || ($.$$ = {}));
+})($ || ($ = {}));
+
+;
+	($.$bog_metrics_dashboard_heatmap) = class $bog_metrics_dashboard_heatmap extends ($.$mol_page) {
+		path(next){
+			if(next !== undefined) return next;
+			return "";
+		}
+		path_options(){
+			return {};
+		}
+		Path_select(){
+			const obj = new this.$.$mol_select();
+			(obj.value) = (next) => ((this.path(next)));
+			(obj.dictionary) = () => ((this.path_options()));
+			(obj.hint) = () => ("All pages");
+			return obj;
+		}
+		clicks_count(){
+			return "0";
+		}
+		Count_card(){
+			const obj = new this.$.$bog_metrics_dashboard_stat_card();
+			(obj.title) = () => ("Clicks");
+			(obj.value) = () => ((this.clicks_count()));
+			return obj;
+		}
+		unique_pages(){
+			return "0";
+		}
+		Pages_card(){
+			const obj = new this.$.$bog_metrics_dashboard_stat_card();
+			(obj.title) = () => ("Unique pages");
+			(obj.value) = () => ((this.unique_pages()));
+			return obj;
+		}
+		Controls(){
+			const obj = new this.$.$mol_row();
+			(obj.sub) = () => ([
+				(this.Path_select()), 
+				(this.Count_card()), 
+				(this.Pages_card())
+			]);
+			return obj;
+		}
+		dot_pos(id){
+			return [0, 0];
+		}
+		Dot(id){
+			const obj = new this.$.$mol_svg_circle();
+			(obj.radius) = () => ("40");
+			(obj.pos) = () => ((this.dot_pos(id)));
+			return obj;
+		}
+		dots(){
+			return [(this.Dot("0"))];
+		}
+		Svg(){
+			const obj = new this.$.$mol_svg_root();
+			(obj.view_box) = () => ("0 0 1000 1000");
+			(obj.aspect) = () => ("xMidYMid meet");
+			(obj.sub) = () => ((this.dots()));
+			return obj;
+		}
+		Map_section(){
+			const obj = new this.$.$mol_section();
+			(obj.title) = () => ("Click heatmap");
+			(obj.content) = () => ([(this.Svg())]);
+			return obj;
+		}
+		empty_text(){
+			return "";
+		}
+		Empty_text(){
+			const obj = new this.$.$mol_paragraph();
+			(obj.title) = () => ((this.empty_text()));
+			return obj;
+		}
+		empty_sub(){
+			return [(this.Empty_text())];
+		}
+		Empty_row(){
+			const obj = new this.$.$mol_view();
+			(obj.sub) = () => ((this.empty_sub()));
+			return obj;
+		}
+		title(){
+			return "Heatmap";
+		}
+		Head(){
+			return null;
+		}
+		all_events(){
+			return [];
+		}
+		body(){
+			return [
+				(this.Controls()), 
+				(this.Map_section()), 
+				(this.Empty_row())
+			];
+		}
+	};
+	($mol_mem(($.$bog_metrics_dashboard_heatmap.prototype), "path"));
+	($mol_mem(($.$bog_metrics_dashboard_heatmap.prototype), "Path_select"));
+	($mol_mem(($.$bog_metrics_dashboard_heatmap.prototype), "Count_card"));
+	($mol_mem(($.$bog_metrics_dashboard_heatmap.prototype), "Pages_card"));
+	($mol_mem(($.$bog_metrics_dashboard_heatmap.prototype), "Controls"));
+	($mol_mem_key(($.$bog_metrics_dashboard_heatmap.prototype), "Dot"));
+	($mol_mem(($.$bog_metrics_dashboard_heatmap.prototype), "Svg"));
+	($mol_mem(($.$bog_metrics_dashboard_heatmap.prototype), "Map_section"));
+	($mol_mem(($.$bog_metrics_dashboard_heatmap.prototype), "Empty_text"));
+	($mol_mem(($.$bog_metrics_dashboard_heatmap.prototype), "Empty_row"));
+
+
+;
+"use strict";
+
+;
+"use strict";
+var $;
+(function ($) {
+    var $$;
+    (function ($$) {
+        const VIEW_SIZE = 1000;
+        class $bog_metrics_dashboard_heatmap extends $.$bog_metrics_dashboard_heatmap {
+            click_events() {
+                const points = [];
+                for (const ev of this.all_events()) {
+                    if (ev.type !== 'click')
+                        continue;
+                    let d = null;
+                    try {
+                        d = JSON.parse(ev.data);
+                    }
+                    catch {
+                        continue;
+                    }
+                    if (!d)
+                        continue;
+                    const x = Number(d.x);
+                    const y = Number(d.y);
+                    if (!isFinite(x) || !isFinite(y))
+                        continue;
+                    const path = typeof d.path === 'string' ? d.path : '';
+                    points.push({ x, y, path });
+                }
+                return points;
+            }
+            path_options() {
+                const paths = new Set();
+                for (const p of this.click_events()) {
+                    if (p.path)
+                        paths.add(p.path);
+                }
+                const dict = { '': 'All pages' };
+                for (const p of [...paths].sort()) {
+                    dict[p] = p;
+                }
+                return dict;
+            }
+            path(next) {
+                if (next !== undefined)
+                    return next;
+                return '';
+            }
+            filtered_points() {
+                const path = this.path();
+                const all = this.click_events();
+                if (!path)
+                    return all;
+                return all.filter(p => p.path === path);
+            }
+            clicks_count() {
+                return String(this.filtered_points().length);
+            }
+            unique_pages() {
+                const paths = new Set(this.click_events().map(p => p.path).filter(Boolean));
+                return String(paths.size);
+            }
+            empty_text() {
+                return this.filtered_points().length
+                    ? ''
+                    : 'No click data yet.';
+            }
+            empty_sub() {
+                return this.filtered_points().length ? [] : [this.Empty_text()];
+            }
+            dots() {
+                return this.filtered_points().map((_, i) => this.Dot(i));
+            }
+            dot_pos(id) {
+                const pt = this.filtered_points()[Number(id)];
+                if (!pt)
+                    return [0, 0];
+                return [pt.x * VIEW_SIZE, pt.y * VIEW_SIZE];
+            }
+        }
+        __decorate([
+            $mol_mem
+        ], $bog_metrics_dashboard_heatmap.prototype, "click_events", null);
+        __decorate([
+            $mol_mem
+        ], $bog_metrics_dashboard_heatmap.prototype, "path_options", null);
+        __decorate([
+            $mol_mem
+        ], $bog_metrics_dashboard_heatmap.prototype, "path", null);
+        __decorate([
+            $mol_mem
+        ], $bog_metrics_dashboard_heatmap.prototype, "filtered_points", null);
+        $$.$bog_metrics_dashboard_heatmap = $bog_metrics_dashboard_heatmap;
+    })($$ = $.$$ || ($.$$ = {}));
+})($ || ($ = {}));
+
+;
+"use strict";
+var $;
+(function ($) {
+    $mol_style_define($bog_metrics_dashboard_heatmap, {
+        Controls: {
+            gap: $mol_gap.block,
+            flex: {
+                wrap: 'wrap',
+            },
+            alignItems: 'stretch',
+        },
+        Path_select: {
+            flex: {
+                grow: 1,
+                basis: '16rem',
+            },
+            minWidth: 0,
+        },
+        Map_section: {
+            margin: {
+                top: $mol_gap.block,
+            },
+        },
+        Svg: {
+            width: '100%',
+            aspectRatio: '1 / 1',
+            background: {
+                color: $mol_theme.card,
+            },
+            border: {
+                radius: $mol_gap.round,
+            },
+            boxShadow: `0 0 0 1px ${$mol_theme.line}`,
+            display: 'block',
+        },
+        Dot: {
+            fill: '#ff3b30',
+            fillOpacity: '0.25',
+            mixBlendMode: 'multiply',
+            pointerEvents: 'none',
+        },
+        Empty_row: {
+            justifyContent: 'center',
+            padding: $mol_gap.block,
+        },
+        Empty_text: {
+            opacity: 0.6,
         },
     });
 })($ || ($ = {}));

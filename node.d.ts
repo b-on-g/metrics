@@ -5470,6 +5470,9 @@ declare namespace $.$$ {
         listen_errors(): {
             destructor: () => void;
         };
+        listen_clicks(): {
+            destructor: () => void;
+        };
         listen_vitals(): {
             destructor: () => void;
         } | null;
@@ -7479,6 +7482,7 @@ declare namespace $ {
 			'sessions': string,
 			'vitals': string,
 			'errors': string,
+			'heatmap': string,
 		}) 
 		,
 		ReturnType< $mol_switch['options'] >
@@ -7503,6 +7507,11 @@ declare namespace $ {
 		,
 		ReturnType< $bog_metrics_dashboard_errors['all_events'] >
 	>
+	type $bog_metrics_dashboard_heatmap__all_events_bog_metrics_dashboard_14 = $mol_type_enforce<
+		ReturnType< $bog_metrics_dashboard['filtered_events'] >
+		,
+		ReturnType< $bog_metrics_dashboard_heatmap['all_events'] >
+	>
 	export class $bog_metrics_dashboard extends $mol_page {
 		app_options( ): Record<string, any>
 		App_filter( ): $mol_select
@@ -7524,6 +7533,7 @@ declare namespace $ {
 		Sessions( ): $bog_metrics_dashboard_sessions
 		Vitals( ): $bog_metrics_dashboard_vitals
 		Errors( ): $bog_metrics_dashboard_errors
+		Heatmap( ): $bog_metrics_dashboard_heatmap
 	}
 	
 }
@@ -7594,7 +7604,7 @@ declare namespace $.$$ {
             referrer: string;
             data: string;
         }[];
-        page_body(): $.$bog_metrics_dashboard_sessions[] | $.$bog_metrics_dashboard_vitals[] | $.$bog_metrics_dashboard_errors[] | $.$bog_metrics_dashboard_overview[];
+        page_body(): $.$bog_metrics_dashboard_sessions[] | $.$bog_metrics_dashboard_vitals[] | $.$bog_metrics_dashboard_errors[] | $.$bog_metrics_dashboard_heatmap[] | $.$bog_metrics_dashboard_overview[];
     }
 }
 
@@ -9351,6 +9361,169 @@ declare namespace $.$$ {
         error_message(index: number): string;
         error_count(index: number): string;
         error_last_seen(index: number): string;
+    }
+    export {};
+}
+
+declare namespace $ {
+}
+
+declare namespace $ {
+
+	export class $mol_svg_circle extends $mol_svg {
+		radius( ): string
+		pos_x( ): string
+		pos_y( ): string
+		dom_name( ): string
+		pos( ): readonly(any)[]
+		attr( ): ({ 
+			'r': ReturnType< $mol_svg_circle['radius'] >,
+			'cx': ReturnType< $mol_svg_circle['pos_x'] >,
+			'cy': ReturnType< $mol_svg_circle['pos_y'] >,
+		})  & ReturnType< $mol_svg['attr'] >
+	}
+	
+}
+
+//# sourceMappingURL=circle.view.tree.d.ts.map
+declare namespace $.$$ {
+    class $mol_svg_circle extends $.$mol_svg_circle {
+        pos_x(): any;
+        pos_y(): any;
+    }
+}
+
+declare namespace $ {
+
+	type $mol_select__value_bog_metrics_dashboard_heatmap_1 = $mol_type_enforce<
+		ReturnType< $bog_metrics_dashboard_heatmap['path'] >
+		,
+		ReturnType< $mol_select['value'] >
+	>
+	type $mol_select__dictionary_bog_metrics_dashboard_heatmap_2 = $mol_type_enforce<
+		ReturnType< $bog_metrics_dashboard_heatmap['path_options'] >
+		,
+		ReturnType< $mol_select['dictionary'] >
+	>
+	type $mol_select__hint_bog_metrics_dashboard_heatmap_3 = $mol_type_enforce<
+		string
+		,
+		ReturnType< $mol_select['hint'] >
+	>
+	type $bog_metrics_dashboard_stat_card__title_bog_metrics_dashboard_heatmap_4 = $mol_type_enforce<
+		string
+		,
+		ReturnType< $bog_metrics_dashboard_stat_card['title'] >
+	>
+	type $bog_metrics_dashboard_stat_card__value_bog_metrics_dashboard_heatmap_5 = $mol_type_enforce<
+		ReturnType< $bog_metrics_dashboard_heatmap['clicks_count'] >
+		,
+		ReturnType< $bog_metrics_dashboard_stat_card['value'] >
+	>
+	type $bog_metrics_dashboard_stat_card__title_bog_metrics_dashboard_heatmap_6 = $mol_type_enforce<
+		string
+		,
+		ReturnType< $bog_metrics_dashboard_stat_card['title'] >
+	>
+	type $bog_metrics_dashboard_stat_card__value_bog_metrics_dashboard_heatmap_7 = $mol_type_enforce<
+		ReturnType< $bog_metrics_dashboard_heatmap['unique_pages'] >
+		,
+		ReturnType< $bog_metrics_dashboard_stat_card['value'] >
+	>
+	type $mol_row__sub_bog_metrics_dashboard_heatmap_8 = $mol_type_enforce<
+		readonly(any)[]
+		,
+		ReturnType< $mol_row['sub'] >
+	>
+	type $mol_svg_circle__radius_bog_metrics_dashboard_heatmap_9 = $mol_type_enforce<
+		string
+		,
+		ReturnType< $mol_svg_circle['radius'] >
+	>
+	type $mol_svg_circle__pos_bog_metrics_dashboard_heatmap_10 = $mol_type_enforce<
+		ReturnType< $bog_metrics_dashboard_heatmap['dot_pos'] >
+		,
+		ReturnType< $mol_svg_circle['pos'] >
+	>
+	type $mol_svg_root__view_box_bog_metrics_dashboard_heatmap_11 = $mol_type_enforce<
+		string
+		,
+		ReturnType< $mol_svg_root['view_box'] >
+	>
+	type $mol_svg_root__aspect_bog_metrics_dashboard_heatmap_12 = $mol_type_enforce<
+		string
+		,
+		ReturnType< $mol_svg_root['aspect'] >
+	>
+	type $mol_svg_root__sub_bog_metrics_dashboard_heatmap_13 = $mol_type_enforce<
+		ReturnType< $bog_metrics_dashboard_heatmap['dots'] >
+		,
+		ReturnType< $mol_svg_root['sub'] >
+	>
+	type $mol_section__title_bog_metrics_dashboard_heatmap_14 = $mol_type_enforce<
+		string
+		,
+		ReturnType< $mol_section['title'] >
+	>
+	type $mol_section__content_bog_metrics_dashboard_heatmap_15 = $mol_type_enforce<
+		readonly(any)[]
+		,
+		ReturnType< $mol_section['content'] >
+	>
+	type $mol_paragraph__title_bog_metrics_dashboard_heatmap_16 = $mol_type_enforce<
+		ReturnType< $bog_metrics_dashboard_heatmap['empty_text'] >
+		,
+		ReturnType< $mol_paragraph['title'] >
+	>
+	type $mol_view__sub_bog_metrics_dashboard_heatmap_17 = $mol_type_enforce<
+		ReturnType< $bog_metrics_dashboard_heatmap['empty_sub'] >
+		,
+		ReturnType< $mol_view['sub'] >
+	>
+	export class $bog_metrics_dashboard_heatmap extends $mol_page {
+		path( next?: string ): string
+		path_options( ): Record<string, any>
+		Path_select( ): $mol_select
+		clicks_count( ): string
+		Count_card( ): $bog_metrics_dashboard_stat_card
+		unique_pages( ): string
+		Pages_card( ): $bog_metrics_dashboard_stat_card
+		Controls( ): $mol_row
+		dot_pos( id: any): readonly(number)[]
+		Dot( id: any): $mol_svg_circle
+		dots( ): readonly(any)[]
+		Svg( ): $mol_svg_root
+		Map_section( ): $mol_section
+		empty_text( ): string
+		Empty_text( ): $mol_paragraph
+		empty_sub( ): readonly(any)[]
+		Empty_row( ): $mol_view
+		title( ): string
+		Head( ): any
+		all_events( ): readonly(any)[]
+		body( ): readonly(any)[]
+	}
+	
+}
+
+//# sourceMappingURL=heatmap.view.tree.d.ts.map
+declare namespace $.$$ {
+    interface ClickPoint {
+        x: number;
+        y: number;
+        path: string;
+    }
+    export class $bog_metrics_dashboard_heatmap extends $.$bog_metrics_dashboard_heatmap {
+        click_events(): ClickPoint[];
+        path_options(): Record<string, string>;
+        path(next?: string): string;
+        filtered_points(): ClickPoint[];
+        clicks_count(): string;
+        unique_pages(): string;
+        empty_text(): "" | "No click data yet.";
+        empty_sub(): $.$mol_paragraph[];
+        dots(): $.$mol_svg_circle[];
+        dot_pos(id: number | string): readonly number[];
     }
     export {};
 }
