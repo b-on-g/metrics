@@ -9,6 +9,7 @@ $bog_metrics_dashboard $mol_page
 			sessions \Sessions
 			vitals \Vitals
 			errors \Errors
+			heatmap \Heatmap
 	app? \
 	tools /
 		<= App_filter $mol_select
@@ -37,4 +38,6 @@ $bog_metrics_dashboard $mol_page
 	Vitals $bog_metrics_dashboard_vitals
 		all_events <= filtered_events /
 	Errors $bog_metrics_dashboard_errors
+		all_events <= filtered_events /
+	Heatmap $bog_metrics_dashboard_heatmap
 		all_events <= filtered_events /

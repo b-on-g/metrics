@@ -70,6 +70,7 @@ namespace $.$$ {
 				case 'sessions': return [this.Sessions()]
 				case 'vitals': return [this.Vitals()]
 				case 'errors': return [this.Errors()]
+				case 'heatmap': return [this.Heatmap()]
 				default: return [this.Overview()]
 			}
 		}

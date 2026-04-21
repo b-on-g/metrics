@@ -97,6 +97,7 @@ namespace $.$$ {
 			this.listen_visibility()
 			this.listen_errors()
 			this.listen_vitals()
+			this.listen_clicks()
 			return null
 		}
 
@@ -155,6 +156,27 @@ namespace $.$$ {
 					window.removeEventListener('error', on_error)
 					window.removeEventListener('unhandledrejection', on_rejection)
 				},
+			}
+		}
+
+		@$mol_mem
+		listen_clicks() {
+			const handler = (event: MouseEvent) => {
+				try {
+					const vw = window.innerWidth || document.documentElement.clientWidth || 1
+					const vh = window.innerHeight || document.documentElement.clientHeight || 1
+					this.track_safe('click', {
+						x: event.clientX / vw,
+						y: event.clientY / vh,
+						path: location.pathname + location.hash,
+						viewport_w: vw,
+						viewport_h: vh,
+					})
+				} catch {}
+			}
+			window.addEventListener('click', handler, { capture: true, passive: true })
+			return {
+				destructor: () => window.removeEventListener('click', handler, { capture: true }),
 			}
 		}
 

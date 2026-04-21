@@ -1,0 +1,33 @@
+$bog_metrics_dashboard_heatmap $mol_page
+	title \Heatmap
+	Head null
+	all_events /
+	body /
+		<= Controls $mol_row
+			sub /
+				<= Path_select $mol_select
+					value?val <=> path?val \
+					dictionary <= path_options *
+					hint \All pages
+				<= Count_card $bog_metrics_dashboard_stat_card
+					title \Clicks
+					value <= clicks_count \0
+				<= Pages_card $bog_metrics_dashboard_stat_card
+					title \Unique pages
+					value <= unique_pages \0
+		<= Map_section $mol_section
+			title \Click heatmap
+			content /
+				<= Svg $mol_svg_root
+					view_box \0 0 1000 1000
+					aspect \xMidYMid meet
+					sub <= dots /
+						<= Dot*0 $mol_svg_circle
+							radius \40
+							pos <= dot_pos* /number
+								0
+								0
+		<= Empty_row $mol_view
+			sub <= empty_sub /
+				<= Empty_text $mol_paragraph
+					title <= empty_text \
