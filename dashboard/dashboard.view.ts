@@ -1,4 +1,10 @@
 namespace $.$$ {
+	// Синхронизация через Гипер Базу отключена: список мастеров пустой.
+	// Чистки одного masters_default мало — masters() склеивает его с пирами
+	// из бандленного сида, где зашит публичный мастер. Глушим сам masters().
+	$giper_baza_yard.masters_default.length = 0
+	$giper_baza_yard.masters = (): string[] => []
+
 	const Events_dict = $giper_baza_dict_to($bog_metrics_event)
 
 	export class $bog_metrics_dashboard extends $.$bog_metrics_dashboard {
